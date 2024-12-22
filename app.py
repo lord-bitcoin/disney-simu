@@ -20,10 +20,10 @@ def reset_to_defaults():
             "sarah_train": 80  # Train pour Sarah venant de Nantes
         },
         "train": {
-            "bordeaux_train": 94,  # Billet Bordeaux-Paris
-            "nantes_train": 80,  # Billet Nantes-Paris
+            "bordeaux_train": 90,  # Billet Bordeaux-Paris
+            "nantes_train": 90,  # Billet Nantes-Paris
             "rer_paris_disney": 10,  # RER Paris-Disney
-            "rer_airbnb_disney": 8,  # RER Airbnb-Disney (par jour par personne)
+            "rer_airbnb_disney": 10,  # RER Airbnb-Disney (par jour par personne)
             "baggage": 5  # Bagagerie (par personne par jour)
         }
     }
@@ -61,10 +61,10 @@ transport_type = st.selectbox("Mode de transport", ["Minibus", "Train"])
 if transport_type == "Minibus":
     st.sidebar.title("Paramètres spécifiques au Minibus")
     costs["minibus"]["location"] = st.sidebar.number_input("Coût location (Minibus)", value=costs["minibus"]["location"])
-    costs["minibus"]["fuel"] = st.sidebar.number_input("Coût carburant (Minibus, 250€)", value=costs["minibus"]["fuel"])
-    costs["minibus"]["toll"] = st.sidebar.number_input("Coût péages (Minibus, 90€)", value=costs["minibus"]["toll"])
-    costs["minibus"]["parking"] = st.sidebar.number_input("Coût parking (par jour, Minibus, 20€)", value=costs["minibus"]["parking"])
-    costs["minibus"]["sarah_train"] = st.sidebar.number_input("Coût train pour Sarah (Minibus, 80€)", value=costs["minibus"]["sarah_train"])
+    costs["minibus"]["fuel"] = st.sidebar.number_input("Coût carburant (Minibus)", value=costs["minibus"]["fuel"])
+    costs["minibus"]["toll"] = st.sidebar.number_input("Coût péages (Minibus)", value=costs["minibus"]["toll"])
+    costs["minibus"]["parking"] = st.sidebar.number_input("Coût parking (par jour, Minibus)", value=costs["minibus"]["parking"])
+    costs["minibus"]["sarah_train"] = st.sidebar.number_input("Coût train pour Sarah (Minibus)", value=costs["minibus"]["sarah_train"])
 
     total_transport = (
         costs["minibus"]["location"] +
@@ -81,11 +81,11 @@ elif transport_type == "Train":
     num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=2)
     num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=5)
 
-    costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris ", value=costs["train"]["bordeaux_train"])
-    costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris (80€)", value=costs["train"]["nantes_train"])
-    costs["train"]["rer_paris_disney"] = st.sidebar.number_input("Coût RER Paris-Disney (10€)", value=costs["train"]["rer_paris_disney"])
-    costs["train"]["rer_airbnb_disney"] = st.sidebar.number_input("Coût RER Airbnb-Disney (8€)", value=costs["train"]["rer_airbnb_disney"])
-    costs["train"]["baggage"] = st.sidebar.number_input("Coût bagagerie (5€)", value=costs["train"]["baggage"])
+    costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris", value=costs["train"]["bordeaux_train"])
+    costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris", value=costs["train"]["nantes_train"])
+    costs["train"]["rer_paris_disney"] = st.sidebar.number_input("Coût RER Paris-Disney", value=costs["train"]["rer_paris_disney"])
+    costs["train"]["rer_airbnb_disney"] = st.sidebar.number_input("Coût RER Airbnb-Disney", value=costs["train"]["rer_airbnb_disney"])
+    costs["train"]["baggage"] = st.sidebar.number_input("Coût bagagerie", value=costs["train"]["baggage"])
 
     baggage_days = st.sidebar.slider("Nombre de jours d'utilisation de la bagagerie", min_value=0, max_value=2, value=1)
 
