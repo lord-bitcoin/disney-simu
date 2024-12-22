@@ -69,14 +69,16 @@ elif transport_type == "Train + Airbnb loin":
     costs["train_airbnb_loin"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris (par personne)", value=costs["train_airbnb_loin"]["bordeaux_train"])
     costs["train_airbnb_loin"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris (par personne)", value=costs["train_airbnb_loin"]["nantes_train"])
     costs["train_airbnb_loin"]["rer_disney"] = st.sidebar.number_input("Coût RER Paris-Disney (par jour par personne)", value=costs["train_airbnb_loin"]["rer_disney"])
-    costs["train_airbnb_loin"]["baggage"] = st.sidebar.number_input("Coût bagagerie (par jour par personne)", value=costs["train_airbnb_loin"]["baggage"])
+    costs["train_airbnb_loin"]["baggage"] = st.sidebar.number_input("Coût bagagerie (par personne par jour)", value=costs["train_airbnb_loin"]["baggage"])
     costs["train_airbnb_loin"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb loin)", value=costs["train_airbnb_loin"]["airbnb"])
+
+    baggage_days = st.sidebar.slider("Nombre de jours d'utilisation de la bagagerie", min_value=0, max_value=2, value=1)
 
     total_transport = (
         (costs["train_airbnb_loin"]["bordeaux_train"] * 4) +
         (costs["train_airbnb_loin"]["nantes_train"] * 1) +
         (costs["train_airbnb_loin"]["rer_disney"] * days * participants) +
-        (costs["train_airbnb_loin"]["baggage"] * days * 5)
+        (costs["train_airbnb_loin"]["baggage"] * participants * baggage_days)
     )
     total_airbnb = costs["train_airbnb_loin"]["airbnb"]
 
@@ -85,14 +87,16 @@ elif transport_type == "Train + Airbnb proche":
     costs["train_airbnb_proche"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris (par personne)", value=costs["train_airbnb_proche"]["bordeaux_train"])
     costs["train_airbnb_proche"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris (par personne)", value=costs["train_airbnb_proche"]["nantes_train"])
     costs["train_airbnb_proche"]["metro_disney"] = st.sidebar.number_input("Coût métro Paris-Disney (par trajet par personne)", value=costs["train_airbnb_proche"]["metro_disney"])
-    costs["train_airbnb_proche"]["baggage"] = st.sidebar.number_input("Coût bagagerie (par jour par personne)", value=costs["train_airbnb_proche"]["baggage"])
+    costs["train_airbnb_proche"]["baggage"] = st.sidebar.number_input("Coût bagagerie (par personne par jour)", value=costs["train_airbnb_proche"]["baggage"])
     costs["train_airbnb_proche"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb proche)", value=costs["train_airbnb_proche"]["airbnb"])
+
+    baggage_days = st.sidebar.slider("Nombre de jours d'utilisation de la bagagerie", min_value=0, max_value=2, value=1)
 
     total_transport = (
         (costs["train_airbnb_proche"]["bordeaux_train"] * 4) +
         (costs["train_airbnb_proche"]["nantes_train"] * 1) +
-        (costs["train_airbnb_proche"]["metro_disney"] * 4 * 2) +
-        (costs["train_airbnb_proche"]["baggage"] * days * 5)
+        (costs["train_airbnb_proche"]["metro_disney"] * 4 * participants) +
+        (costs["train_airbnb_proche"]["baggage"] * participants * baggage_days)
     )
     total_airbnb = costs["train_airbnb_proche"]["airbnb"]
 
@@ -105,12 +109,13 @@ total_disney = costs["common"]["disney"] * participants
 total_food = costs["common"]["food"] * days * participants
 
 # Total final
+# Les coûts totaux sont répartis sur 6 participants au lieu de 7
 total_cost = total_transport + total_airbnb + total_disney + total_food
-cost_per_person = total_cost / participants
+cost_per_person = total_cost / 6
 
 # Affichage des résultats
 st.write(f"**Coût total pour {transport_type} :** {total_cost} €")
-st.write(f"**Coût par personne :** {cost_per_person:.2f} €")
+st.write(f"**Coût par personne (réparti sur 6) :** {cost_per_person:.2f} €")
 
 # Résumé détaillé
 st.write("### Détail des coûts")
