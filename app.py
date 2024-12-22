@@ -45,7 +45,7 @@ if st.button("Rétablir les valeurs par défaut"):
 
 # Entrées utilisateur
 participants = st.number_input("Nombre de participants", min_value=1, value=7)
-days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
+days = st.number_input("Nombre de jours", min_value=3, value=4)
 
 gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
 
