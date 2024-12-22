@@ -37,16 +37,17 @@ def load_data():
 # Chargement des données sauvegardées
 costs = load_data()
 
+# Option pour rétablir les valeurs par défaut
+if st.button("Rétablir les valeurs par défaut"):
+    costs = reset_to_defaults()
+    st.session_state["cached_costs"] = costs
+    st.experimental_rerun()
+
 # Entrées utilisateur
 participants = st.number_input("Nombre de participants", min_value=1, value=7)
 days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
 
-# Calcul dynamique des participants pour RER
-num_bordeaux_train = st.sidebar.number_input("Nombre de participants depuis Bordeaux", min_value=0, value=4)
-num_nantes_train = st.sidebar.number_input("Nombre de participants depuis Nantes", min_value=0, value=1)
-
-total_rer_paris_disney_participants = 2 + num_bordeaux_train + num_nantes_train
-total_rer_airbnb_disney_participants = participants - total_rer_paris_disney_participants
+gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
 
 # Choix Airbnb proche Disney
 airbnb_proche_disney = st.checkbox("Airbnb proche Disney (accessible à pieds)")
@@ -55,7 +56,7 @@ if airbnb_proche_disney:
     costs["train"]["rer_airbnb_disney"] = 0  # Désactiver l'option RER Airbnb-Disney
 if not airbnb_proche_disney:
     costs["common"]["lodging_per_night"] = 40  # Modifier le coût par nuit par participant
-    costs["train"]["rer_airbnb_disney"] = 10
+    costs["train"]["rer_airbnb_disney"] = 10  # Désactiver l'option RER Airbnb-Disney
 
 # Ajustement du coût du logement
 costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant", value=costs["common"]["lodging_per_night"])
@@ -84,6 +85,10 @@ if transport_type == "Minibus":
 
 elif transport_type == "Train":
     st.sidebar.title("Paramètres spécifiques au Train")
+    num_bordeaux_train = st.sidebar.number_input("Nombre de participants depuis Bordeaux", min_value=0, value=4)
+    num_nantes_train = st.sidebar.number_input("Nombre de participants depuis Nantes", min_value=0, value=1)
+    num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=7)
+    num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=7, disabled=airbnb_proche_disney)
 
     costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris", value=costs["train"]["bordeaux_train"])
     costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris", value=costs["train"]["nantes_train"])
@@ -96,8 +101,8 @@ elif transport_type == "Train":
     total_transport = (
         (costs["train"]["bordeaux_train"] * num_bordeaux_train) +
         (costs["train"]["nantes_train"] * num_nantes_train) +
-        (costs["train"]["rer_paris_disney"] * 2 * total_rer_paris_disney_participants) +
-        (costs["train"]["rer_airbnb_disney"] * days * total_rer_airbnb_disney_participants) +
+        (costs["train"]["rer_paris_disney"] * 2 * num_rer_paris_disney) +
+        (costs["train"]["rer_airbnb_disney"] * days * num_rer_airbnb_disney) +
         (costs["train"]["baggage"] * participants * baggage_days)
     )
 
@@ -111,7 +116,7 @@ total_food = costs["common"]["food"] * days * participants
 
 # Total final
 # Les coûts totaux sont répartis sur le nombre de participants moins 1 si l'option cadeau est activée
-repartition_count = participants - 1 if st.checkbox("Activer l'option cadeau d'anniversaire") else participants
+repartition_count = participants - 1 if gift_option else participants
 
 # Calcul des totaux
 total_cost = total_transport + total_lodging + total_disney + total_food
@@ -142,8 +147,8 @@ def generate_html_report():
         html_content += f"""
             <li>Billets Bordeaux-Paris (pour {num_bordeaux_train} participants) : {costs['train']['bordeaux_train'] * num_bordeaux_train} €</li>
             <li>Billets Nantes-Paris (pour {num_nantes_train} participants) : {costs['train']['nantes_train'] * num_nantes_train} €</li>
-            <li>RER Paris-Disney (pour {total_rer_paris_disney_participants} participants) : {costs['train']['rer_paris_disney'] * 2 * total_rer_paris_disney_participants} €</li>
-            <li>RER Airbnb-Disney (pour {total_rer_airbnb_disney_participants} participants sur {days} jours) : {costs['train']['rer_airbnb_disney'] * total_rer_airbnb_disney_participants * days} €</li>
+            <li>RER Paris-Disney (pour {num_rer_paris_disney} participants) : {costs['train']['rer_paris_disney'] * 2 * num_rer_paris_disney} €</li>
+            <li>RER Airbnb-Disney (pour {num_rer_airbnb_disney} participants sur {days} jours) : {costs['train']['rer_airbnb_disney'] * num_rer_airbnb_disney * days} €</li>
             <li>Bagagerie (pour {participants} participants sur {baggage_days} jours) : {costs['train']['baggage'] * participants * baggage_days} €</li>
         """
 
