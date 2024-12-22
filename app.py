@@ -36,35 +36,19 @@ if st.button("Rétablir les valeurs par défaut"):
     costs = reset_to_defaults()
     st.experimental_rerun()
 
-# Ajustement des coûts
-st.sidebar.title("Paramètres des coûts")
-
-# Options communes
-costs["common"]["disney"] = st.sidebar.number_input("Coût Disney (par personne)", value=costs["common"]["disney"])
-costs["common"]["food"] = st.sidebar.number_input("Coût nourriture (par jour)", value=costs["common"]["food"])
-
-# Options spécifiques au Minibus
-costs["minibus"]["location"] = st.sidebar.number_input("Coût location (Minibus)", value=costs["minibus"]["location"])
-costs["minibus"]["fuel"] = st.sidebar.number_input("Coût carburant (Minibus)", value=costs["minibus"]["fuel"])
-costs["minibus"]["toll"] = st.sidebar.number_input("Coût péages (Minibus)", value=costs["minibus"]["toll"])
-costs["minibus"]["parking"] = st.sidebar.number_input("Coût parking (par jour, Minibus)", value=costs["minibus"]["parking"])
-costs["minibus"]["sarah_train"] = st.sidebar.number_input("Coût train pour Sarah (Minibus)", value=costs["minibus"]["sarah_train"])
-
-# Options spécifiques au Train + Airbnb loin
-costs["train_airbnb_loin"]["transport"] = st.sidebar.number_input("Coût transport (Train + Airbnb loin)", value=costs["train_airbnb_loin"]["transport"])
-costs["train_airbnb_loin"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb loin)", value=costs["train_airbnb_loin"]["airbnb"])
-
-# Options spécifiques au Train + Airbnb proche
-costs["train_airbnb_proche"]["transport"] = st.sidebar.number_input("Coût transport (Train + Airbnb proche)", value=costs["train_airbnb_proche"]["transport"])
-costs["train_airbnb_proche"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb proche)", value=costs["train_airbnb_proche"]["airbnb"])
-
 # Entrées utilisateur
 participants = st.number_input("Nombre de participants", min_value=1, value=7)
 days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
 transport_type = st.selectbox("Mode de transport", ["Minibus", "Train + Airbnb loin", "Train + Airbnb proche"])
 
-# Calculs
+# Ajustement des coûts dynamiques en fonction du transport
 if transport_type == "Minibus":
+    st.sidebar.title("Paramètres spécifiques au Minibus")
+    costs["minibus"]["location"] = st.sidebar.number_input("Coût location (Minibus)", value=costs["minibus"]["location"])
+    costs["minibus"]["fuel"] = st.sidebar.number_input("Coût carburant (Minibus)", value=costs["minibus"]["fuel"])
+    costs["minibus"]["toll"] = st.sidebar.number_input("Coût péages (Minibus)", value=costs["minibus"]["toll"])
+    costs["minibus"]["parking"] = st.sidebar.number_input("Coût parking (par jour, Minibus)", value=costs["minibus"]["parking"])
+    costs["minibus"]["sarah_train"] = st.sidebar.number_input("Coût train pour Sarah (Minibus)", value=costs["minibus"]["sarah_train"])
     total_transport = (
         costs["minibus"]["location"] +
         costs["minibus"]["fuel"] +
@@ -73,12 +57,25 @@ if transport_type == "Minibus":
         costs["minibus"]["sarah_train"]
     )
     total_airbnb = 1000  # Coût Airbnb défini pour le Minibus
+
 elif transport_type == "Train + Airbnb loin":
+    st.sidebar.title("Paramètres spécifiques au Train + Airbnb loin")
+    costs["train_airbnb_loin"]["transport"] = st.sidebar.number_input("Coût transport (Train + Airbnb loin)", value=costs["train_airbnb_loin"]["transport"])
+    costs["train_airbnb_loin"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb loin)", value=costs["train_airbnb_loin"]["airbnb"])
     total_transport = costs["train_airbnb_loin"]["transport"]
     total_airbnb = costs["train_airbnb_loin"]["airbnb"]
+
 elif transport_type == "Train + Airbnb proche":
+    st.sidebar.title("Paramètres spécifiques au Train + Airbnb proche")
+    costs["train_airbnb_proche"]["transport"] = st.sidebar.number_input("Coût transport (Train + Airbnb proche)", value=costs["train_airbnb_proche"]["transport"])
+    costs["train_airbnb_proche"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb proche)", value=costs["train_airbnb_proche"]["airbnb"])
     total_transport = costs["train_airbnb_proche"]["transport"]
     total_airbnb = costs["train_airbnb_proche"]["airbnb"]
+
+# Options communes
+st.sidebar.title("Paramètres communs")
+costs["common"]["disney"] = st.sidebar.number_input("Coût Disney (par personne)", value=costs["common"]["disney"])
+costs["common"]["food"] = st.sidebar.number_input("Coût nourriture (par jour)", value=costs["common"]["food"])
 
 total_disney = costs["common"]["disney"] * participants
 total_food = costs["common"]["food"] * days * participants
