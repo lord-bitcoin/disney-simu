@@ -92,14 +92,14 @@ elif transport_type == "Train":
     total_transport = (
         (costs["train"]["bordeaux_train"] * num_bordeaux_train) +
         (costs["train"]["nantes_train"] * num_nantes_train) +
-        (costs["train"]["rer_paris_disney"] * days * num_rer_paris_disney) +
+        (costs["train"]["rer_paris_disney"] * 2 * num_rer_paris_disney) +
         (costs["train"]["rer_airbnb_disney"] * days * num_rer_airbnb_disney) +
         (costs["train"]["baggage"] * participants * baggage_days)
     )
 
 # Options communes
 st.sidebar.title("Paramètres communs")
-costs["common"]["disney"] = st.sidebar.number_input("Coût Disney", value=costs["common"]["disney"])
+costs["common"]["disney"] = st.sidebar.number_input("Coût Billets Disney", value=costs["common"]["disney"])
 costs["common"]["food"] = st.sidebar.number_input("Coût nourriture", value=costs["common"]["food"])
 
 total_disney = costs["common"]["disney"] * participants
@@ -123,7 +123,7 @@ def generate_html_report():
         <h2>Détails des coûts par catégorie</h2>
         <h3>Nombre de participants : ({participants})</h3>
         <h3>Nombre de nuitées : ({days})</h3>
-        
+
         <h3>Transport ({transport_type})</h3>
         <ul>
             <li><strong>Coût total :</strong> {total_transport} €</li>
