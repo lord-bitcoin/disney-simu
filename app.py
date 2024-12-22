@@ -1,4 +1,5 @@
 import streamlit as st
+import json
 
 # Titre et description
 st.title("Simulateur de voyage à Disneyland")
@@ -27,13 +28,25 @@ def reset_to_defaults():
         }
     }
 
-# Initialisation des coûts
-default_costs = reset_to_defaults()
-costs = default_costs.copy()
+# Mise en cache des données
+def load_data():
+    if "cached_costs" not in st.session_state:
+        st.session_state["cached_costs"] = reset_to_defaults()
+    return st.session_state["cached_costs"]
+
+def save_to_cache(data):
+    st.session_state["cached_costs"] = data
+
+costs = load_data()
+
+def save_summary(summary):
+    with open("summary.json", "w") as f:
+        json.dump(summary, f, indent=4)
 
 # Option pour rétablir les valeurs par défaut
 if st.button("Rétablir les valeurs par défaut"):
     costs = reset_to_defaults()
+    save_to_cache(costs)
     st.experimental_rerun()
 
 # Entrées utilisateur
@@ -101,15 +114,26 @@ total_food = costs["common"]["food"] * days * participants
 total_cost = total_transport + total_lodging + total_disney + total_food
 cost_per_person = total_cost / 6
 
+# Résumé détaillé
+detailed_summary = {
+    "Transport total": total_transport,
+    "Hébergement (par nuit)": costs['common']['lodging_per_night'],
+    "Hébergement total": total_lodging,
+    "Disney billets": total_disney,
+    "Nourriture (total)": total_food,
+    "Coût total groupe": total_cost,
+    "Coût par personne": cost_per_person
+}
+
 # Affichage des résultats
 st.write(f"**Coût total pour {transport_type} :** {total_cost} €")
 st.write(f"**Coût par personne (réparti sur 6) :** {cost_per_person:.2f} €")
 
-# Résumé détaillé
+# Affichage du résumé détaillé
 st.write("### Détail des coûts")
-st.write(f"- **Transport total :** {total_transport} €")
-st.write(f"- **Hébergement (par nuit) :** {costs['common']['lodging_per_night']} € par participant")
-st.write(f"- **Hébergement total :** {total_lodging} €")
-st.write(f"- **Disney billets :** {total_disney} €")
-st.write(f"  - Coût par jour par personne : {costs['common']['food']} €")
-st.write(f"  - Coût total nourriture : {total_food} €")
+st.write(detailed_summary)
+
+# Bouton pour enregistrer le résumé détaillé
+if st.button("Exporter le résumé détaillé"):
+    save_summary(detailed_summary)
+    st.success("Résumé exporté en tant que fichier JSON.")
