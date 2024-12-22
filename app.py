@@ -140,6 +140,7 @@ def generate_html_report():
         <h2>Détails des paramètres</h2>
         <ul>
             <li><strong>Nombre de participants :</strong> {participants}</li>
+            <li><strong>Nombre de jours :</strong> {days}</li>
             <li><strong>Nombre de nuitées :</strong> {num_nights}</li>
         </ul>
 
