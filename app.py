@@ -8,7 +8,7 @@ st.write("Comparez les coûts des différents scénarios pour votre groupe et aj
 def reset_to_defaults():
     return {
         "common": {
-            "disney": 300,  # Par personne
+            "disney": 260,  # Par personne
             "food": 15,  # Par jour
             "lodging_per_night": 40  # Coût du logement par nuit et par participant
         },
