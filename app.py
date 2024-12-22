@@ -36,6 +36,7 @@ def load_data():
 def save_to_cache(data):
     st.session_state["cached_costs"] = data
 
+# Chargement des données sauvegardées
 costs = load_data()
 
 # Option pour rétablir les valeurs par défaut
@@ -120,3 +121,8 @@ st.markdown(f"- **Transport total :** {total_transport} €")
 st.markdown(f"- **Hébergement :** {total_lodging} € (à raison de {costs['common']['lodging_per_night']} € par nuit par participant)")
 st.markdown(f"- **Billets Disney :** {total_disney} €")
 st.markdown(f"- **Nourriture :** {total_food} € (à raison de {costs['common']['food']} € par jour par participant)")
+
+# Bouton pour sauvegarder les données validées
+if st.button("Valider les paramètres"):
+    save_to_cache(costs)
+    st.success("Les paramètres ont été sauvegardés pour cette session.")
