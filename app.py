@@ -96,7 +96,7 @@ elif transport_type == "Train":
     costs["train"]["rer_airbnb_disney"] = st.sidebar.number_input("Coût RER Airbnb-Disney", value=costs["train"]["rer_airbnb_disney"], disabled=airbnb_proche_disney)
     costs["train"]["baggage"] = st.sidebar.number_input("Coût bagagerie", value=costs["train"]["baggage"])
 
-    baggage_days = st.sidebar.slider("Nombre de jours d'utilisation de la bagagerie", min_value=0, max_value=2, value=1)
+    baggage_days = st.sidebar.slider("Nombre de jours d'utilisation de la bagagerie", min_value=0, max_value=2, value=0)
 
     total_transport = (
         (costs["train"]["bordeaux_train"] * num_bordeaux_train) +
