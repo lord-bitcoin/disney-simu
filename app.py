@@ -2,66 +2,7 @@ import streamlit as st
 import base64
 
 # Titre et description
-st.title("Simulateur de voyage à Disneyland")
-st.write("Comparez les coûts des différents scénarios pour votre groupe et ajustez les paramètres selon vos besoins.")
-
-def reset_to_defaults():
-    return {
-        "common": {
-            "disney": 300,  # Par personne
-            "food": 15,  # Par jour
-            "lodging_per_night": 40  # Coût du logement par nuit et par participant
-        },
-        "minibus": {
-            "location": 500,  # Location du minibus
-            "fuel": 250,  # Carburant
-            "toll": 90,  # Péages
-            "parking": 20,  # Par jour
-            "sarah_train": 80  # Train pour Sarah venant de Nantes
-        },
-        "train": {
-            "bordeaux_train": 94,  # Billet Bordeaux-Paris
-            "nantes_train": 80,  # Billet Nantes-Paris
-            "rer_paris_disney": 10,  # RER Paris-Disney
-            "rer_airbnb_disney": 8,  # RER Airbnb-Disney (par jour par personne)
-            "baggage": 5  # Bagagerie (par personne par jour)
-        }
-    }
-
-# Mise en cache des données
-def load_data():
-    if "cached_costs" not in st.session_state:
-        st.session_state["cached_costs"] = reset_to_defaults()
-    return st.session_state["cached_costs"]
-
-# Chargement des données sauvegardées
-costs = load_data()
-
-# Option pour rétablir les valeurs par défaut
-if st.button("Rétablir les valeurs par défaut"):
-    costs = reset_to_defaults()
-    st.session_state["cached_costs"] = costs
-    st.experimental_rerun()
-
-# Entrées utilisateur
-participants = st.number_input("Nombre de participants", min_value=1, value=7)
-days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
-
-gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
-
-# Ajustement du coût du logement
-costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant", value=costs["common"]["lodging_per_night"])
-# Correction du calcul total du logement
-lodging_per_participant = costs["common"]["lodging_per_night"] * days
-total_lodging = lodging_per_participant * participants
-
-# Sélection du mode de transport
-transport_type = st.selectbox("Mode de transport", ["Minibus", "Train"])
-
-if transport_type == "Minibus":
-    st.sidebar.title("Paramètres spécifiques au Minibus")
-    costs["minibus"]["location"] = st.sidebar.number_input("Coût location (Minibus, 500€)", value=costs["minibus"]["location"])
-    costs["minibus"]["fuel"] = st.sidebar.number_input("Coût carburant (Minibus, 250€)", value=costs["minibus"]["fuel"])
+st.title(Train)", value=costs["minibus"]["fuel"])
     costs["minibus"]["toll"] = st.sidebar.number_input("Coût péages (Minibus, 90€)", value=costs["minibus"]["toll"])
     costs["minibus"]["parking"] = st.sidebar.number_input("Coût parking (par jour, Minibus, 20€)", value=costs["minibus"]["parking"])
     costs["minibus"]["sarah_train"] = st.sidebar.number_input("Coût train pour Sarah (Minibus, 80€)", value=costs["minibus"]["sarah_train"])
