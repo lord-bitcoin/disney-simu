@@ -120,15 +120,55 @@ def generate_html_report():
     <head><title>Résumé des coûts - Disneyland</title></head>
     <body>
         <h1>Résumé des coûts pour le voyage à Disneyland</h1>
-        <p><strong>Transport : </strong>{transport_type}</p>
+        <h2>Détails des coûts par catégorie</h2>
+
+        <h3>Transport ({transport_type})</h3>
         <ul>
-            <li><strong>Transport total :</strong> {total_transport} €</li>
-            <li><strong>Hébergement :</strong> {total_lodging} € (à raison de {costs['common']['lodging_per_night']} € par nuit par participant)</li>
-            <li><strong>Billets Disney :</strong> {total_disney} €</li>
-            <li><strong>Nourriture :</strong> {total_food} € (à raison de {costs['common']['food']} € par jour par participant)</li>
+            <li><strong>Coût total :</strong> {total_transport} €</li>
+    """
+    if transport_type == "Minibus":
+        html_content += f"""
+            <li>Location du minibus : {costs['minibus']['location']} €</li>
+            <li>Carburant : {costs['minibus']['fuel']} €</li>
+            <li>Péages : {costs['minibus']['toll']} €</li>
+            <li>Parking (pour {days} jours) : {costs['minibus']['parking'] * days} €</li>
+            <li>Train pour Sarah : {costs['minibus']['sarah_train']} €</li>
+        """
+    elif transport_type == "Train":
+        html_content += f"""
+            <li>Billets Bordeaux-Paris (pour {num_bordeaux_train} participants) : {costs['train']['bordeaux_train'] * num_bordeaux_train} €</li>
+            <li>Billets Nantes-Paris (pour {num_nantes_train} participants) : {costs['train']['nantes_train'] * num_nantes_train} €</li>
+            <li>RER Paris-Disney (pour {num_rer_paris_disney} participants sur {days} jours) : {costs['train']['rer_paris_disney'] * num_rer_paris_disney * days} €</li>
+            <li>RER Airbnb-Disney (pour {num_rer_airbnb_disney} participants sur {days} jours) : {costs['train']['rer_airbnb_disney'] * num_rer_airbnb_disney * days} €</li>
+            <li>Bagagerie (pour {participants} participants sur {baggage_days} jours) : {costs['train']['baggage'] * participants * baggage_days} €</li>
+        """
+
+    html_content += f"""
         </ul>
-        <p><strong>Coût total :</strong> {total_cost} €</p>
-        <p><strong>Coût par personne :</strong> {cost_per_person:.2f} € (réparti sur {repartition_count} participants)</p>
+
+        <h3>Hébergement</h3>
+        <ul>
+            <li><strong>Coût total :</strong> {total_lodging} €</li>
+            <li>Coût par nuit et par participant : {costs['common']['lodging_per_night']} €</li>
+        </ul>
+
+        <h3>Billets Disney</h3>
+        <ul>
+            <li><strong>Coût total :</strong> {total_disney} €</li>
+            <li>Coût par participant : {costs['common']['disney']} €</li>
+        </ul>
+
+        <h3>Nourriture</h3>
+        <ul>
+            <li><strong>Coût total :</strong> {total_food} €</li>
+            <li>Coût par jour et par participant : {costs['common']['food']} €</li>
+        </ul>
+
+        <h2>Résumé final</h2>
+        <ul>
+            <li><strong>Coût total :</strong> {total_cost} €</li>
+            <li><strong>Coût par personne :</strong> {cost_per_person:.2f} € (réparti sur {repartition_count} participants)</li>
+        </ul>
     </body>
     </html>
     """
