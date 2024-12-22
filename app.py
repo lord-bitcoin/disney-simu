@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 
 # Titre et description
 st.title("Simulateur de voyage à Disneyland")
@@ -52,7 +53,7 @@ days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
 gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
 
 # Ajustement du coût du logement
-costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant (par défaut 40€)", value=costs["common"]["lodging_per_night"])
+costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant", value=costs["common"]["lodging_per_night"])
 # Correction du calcul total du logement
 lodging_per_participant = costs["common"]["lodging_per_night"] * days
 total_lodging = lodging_per_participant * participants
@@ -62,11 +63,11 @@ transport_type = st.selectbox("Mode de transport", ["Minibus", "Train"])
 
 if transport_type == "Minibus":
     st.sidebar.title("Paramètres spécifiques au Minibus")
-    costs["minibus"]["location"] = st.sidebar.number_input("Coût location (Minibus, par défaut 500€)", value=costs["minibus"]["location"])
-    costs["minibus"]["fuel"] = st.sidebar.number_input("Coût carburant (Minibus, par défaut 250€)", value=costs["minibus"]["fuel"])
-    costs["minibus"]["toll"] = st.sidebar.number_input("Coût péages (Minibus, par défaut 90€)", value=costs["minibus"]["toll"])
-    costs["minibus"]["parking"] = st.sidebar.number_input("Coût parking (par jour, Minibus, par défaut 20€)", value=costs["minibus"]["parking"])
-    costs["minibus"]["sarah_train"] = st.sidebar.number_input("Coût train pour Sarah (Minibus, par défaut 80€)", value=costs["minibus"]["sarah_train"])
+    costs["minibus"]["location"] = st.sidebar.number_input("Coût location (Minibus, 500€)", value=costs["minibus"]["location"])
+    costs["minibus"]["fuel"] = st.sidebar.number_input("Coût carburant (Minibus, 250€)", value=costs["minibus"]["fuel"])
+    costs["minibus"]["toll"] = st.sidebar.number_input("Coût péages (Minibus, 90€)", value=costs["minibus"]["toll"])
+    costs["minibus"]["parking"] = st.sidebar.number_input("Coût parking (par jour, Minibus, 20€)", value=costs["minibus"]["parking"])
+    costs["minibus"]["sarah_train"] = st.sidebar.number_input("Coût train pour Sarah (Minibus, 80€)", value=costs["minibus"]["sarah_train"])
 
     total_transport = (
         costs["minibus"]["location"] +
@@ -83,11 +84,11 @@ elif transport_type == "Train":
     num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=2)
     num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=5)
 
-    costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris (par personne, par défaut 94€)", value=costs["train"]["bordeaux_train"])
-    costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris (par personne, par défaut 80€)", value=costs["train"]["nantes_train"])
-    costs["train"]["rer_paris_disney"] = st.sidebar.number_input("Coût RER Paris-Disney (par jour par personne, par défaut 10€)", value=costs["train"]["rer_paris_disney"])
-    costs["train"]["rer_airbnb_disney"] = st.sidebar.number_input("Coût RER Airbnb-Disney (par jour par personne, par défaut 8€)", value=costs["train"]["rer_airbnb_disney"])
-    costs["train"]["baggage"] = st.sidebar.number_input("Coût bagagerie (par personne par jour, par défaut 5€)", value=costs["train"]["baggage"])
+    costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris (94€)", value=costs["train"]["bordeaux_train"])
+    costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris (80€)", value=costs["train"]["nantes_train"])
+    costs["train"]["rer_paris_disney"] = st.sidebar.number_input("Coût RER Paris-Disney (10€)", value=costs["train"]["rer_paris_disney"])
+    costs["train"]["rer_airbnb_disney"] = st.sidebar.number_input("Coût RER Airbnb-Disney (8€)", value=costs["train"]["rer_airbnb_disney"])
+    costs["train"]["baggage"] = st.sidebar.number_input("Coût bagagerie (5€)", value=costs["train"]["baggage"])
 
     baggage_days = st.sidebar.slider("Nombre de jours d'utilisation de la bagagerie", min_value=0, max_value=2, value=1)
 
@@ -101,8 +102,8 @@ elif transport_type == "Train":
 
 # Options communes
 st.sidebar.title("Paramètres communs")
-costs["common"]["disney"] = st.sidebar.number_input("Coût Disney (par personne, par défaut 300€)", value=costs["common"]["disney"])
-costs["common"]["food"] = st.sidebar.number_input("Coût nourriture (par jour, par personne, par défaut 15€)", value=costs["common"]["food"])
+costs["common"]["disney"] = st.sidebar.number_input("Coût Disney (300€)", value=costs["common"]["disney"])
+costs["common"]["food"] = st.sidebar.number_input("Coût nourriture (15€)", value=costs["common"]["food"])
 
 total_disney = costs["common"]["disney"] * participants
 total_food = costs["common"]["food"] * days * participants
@@ -115,6 +116,27 @@ repartition_count = participants - 1 if gift_option else participants
 total_cost = total_transport + total_lodging + total_disney + total_food
 cost_per_person = total_cost / repartition_count
 
+# Fonction pour générer le contenu HTML
+def generate_html_report():
+    html_content = f"""
+    <html>
+    <head><title>Résumé des coûts - Disneyland</title></head>
+    <body>
+        <h1>Résumé des coûts pour le voyage à Disneyland</h1>
+        <p><strong>Transport : </strong>{transport_type}</p>
+        <ul>
+            <li><strong>Transport total :</strong> {total_transport} €</li>
+            <li><strong>Hébergement :</strong> {total_lodging} € (à raison de {costs['common']['lodging_per_night']} € par nuit par participant)</li>
+            <li><strong>Billets Disney :</strong> {total_disney} €</li>
+            <li><strong>Nourriture :</strong> {total_food} € (à raison de {costs['common']['food']} € par jour par participant)</li>
+        </ul>
+        <p><strong>Coût total :</strong> {total_cost} €</p>
+        <p><strong>Coût par personne :</strong> {cost_per_person:.2f} € (réparti sur {repartition_count} participants)</p>
+    </body>
+    </html>
+    """
+    return html_content
+
 # Affichage des résultats
 st.header("Résumé des coûts")
 st.markdown(f"### **Coût total pour {transport_type} :** {total_cost} €")
@@ -126,6 +148,13 @@ st.markdown(f"- **Transport total :** {total_transport} €")
 st.markdown(f"- **Hébergement :** {total_lodging} € (à raison de {costs['common']['lodging_per_night']} € par nuit par participant)")
 st.markdown(f"- **Billets Disney :** {total_disney} €")
 st.markdown(f"- **Nourriture :** {total_food} € (à raison de {costs['common']['food']} € par jour par participant)")
+
+# Génération de la page HTML
+if st.button("Générer le résumé HTML"):
+    html_report = generate_html_report()
+    b64_html = base64.b64encode(html_report.encode()).decode()
+    href = f'<a href="data:text/html;base64,{b64_html}" download="disney_trip_summary.html" target="_blank">Télécharger ou ouvrir le résumé HTML</a>'
+    st.markdown(href, unsafe_allow_html=True)
 
 # Bouton pour sauvegarder les données validées
 if st.button("Valider les paramètres"):
