@@ -34,16 +34,13 @@ def load_data():
         st.session_state["cached_costs"] = reset_to_defaults()
     return st.session_state["cached_costs"]
 
-def save_to_cache(data):
-    st.session_state["cached_costs"] = data
-
 # Chargement des données sauvegardées
 costs = load_data()
 
 # Option pour rétablir les valeurs par défaut
 if st.button("Rétablir les valeurs par défaut"):
     costs = reset_to_defaults()
-    save_to_cache(costs)
+    st.session_state["cached_costs"] = costs
     st.experimental_rerun()
 
 # Entrées utilisateur
@@ -154,9 +151,4 @@ if st.button("Générer le résumé HTML"):
     html_report = generate_html_report()
     b64_html = base64.b64encode(html_report.encode()).decode()
     href = f'<a href="data:text/html;base64,{b64_html}" download="disney_trip_summary.html" target="_blank">Télécharger ou ouvrir le résumé HTML</a>'
-    st.markdown(href, unsafe_allow_html=True)
-
-# Bouton pour sauvegarder les données validées
-if st.button("Valider les paramètres"):
-    save_to_cache(costs)
-    st.success("Les paramètres ont été sauvegardés pour cette session.")
+   
