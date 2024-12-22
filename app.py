@@ -54,7 +54,6 @@ airbnb_proche_disney = st.checkbox("Airbnb proche Disney (accessible à pieds)")
 if airbnb_proche_disney:
     costs["common"]["lodging_per_night"] = 60  # Modifier le coût par nuit par participant
     costs["train"]["rer_airbnb_disney"] = 0  # Désactiver l'option RER Airbnb-Disney
-    costs["train"]["num_rer_airbnb_disney"] = 0
 if not airbnb_proche_disney:
     costs["common"]["lodging_per_night"] = 40  # Modifier le coût par nuit par participant
     costs["train"]["rer_airbnb_disney"] = 10  # Désactiver l'option RER Airbnb-Disney
@@ -88,7 +87,7 @@ elif transport_type == "Train":
     st.sidebar.title("Paramètres spécifiques au Train")
     num_bordeaux_train = st.sidebar.number_input("Nombre de participants depuis Bordeaux", min_value=0, value=4)
     num_nantes_train = st.sidebar.number_input("Nombre de participants depuis Nantes", min_value=0, value=1)
-    num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=2)
+    num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=7)
     num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=7, disabled=airbnb_proche_disney)
 
     costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris", value=costs["train"]["bordeaux_train"])
