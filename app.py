@@ -1,6 +1,4 @@
 import streamlit as st
-import json
-from fpdf import FPDF
 
 # Titre et description
 st.title("Simulateur de voyage à Disneyland")
@@ -39,21 +37,6 @@ def save_to_cache(data):
     st.session_state["cached_costs"] = data
 
 costs = load_data()
-
-def save_summary_to_txt(summary):
-    with open("summary.txt", "w") as f:
-        for key, value in summary.items():
-            f.write(f"{key}: {value}\n")
-
-def save_summary_to_pdf(summary):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt="Résumé des coûts", ln=True, align='C')
-    pdf.ln(10)
-    for key, value in summary.items():
-        pdf.cell(200, 10, txt=f"{key}: {value}", ln=True)
-    pdf.output("summary.pdf")
 
 # Option pour rétablir les valeurs par défaut
 if st.button("Rétablir les valeurs par défaut"):
@@ -144,14 +127,3 @@ st.write(f"**Coût par personne (réparti sur 6) :** {cost_per_person:.2f} €")
 # Affichage du résumé détaillé
 st.write("### Détail des coûts")
 st.write(detailed_summary)
-
-# Boutons pour exporter le résumé détaillé
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("Exporter en TXT"):
-        save_summary_to_txt(detailed_summary)
-        st.success("Résumé exporté en tant que fichier TXT.")
-with col2:
-    if st.button("Exporter en PDF"):
-        save_summary_to_pdf(detailed_summary)
-        st.success("Résumé exporté en tant que fichier PDF.")
