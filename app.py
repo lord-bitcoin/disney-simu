@@ -136,6 +136,12 @@ def generate_html_report():
     <head><title>Résumé des coûts - Disneyland</title></head>
     <body>
         <h1>Résumé des coûts pour le voyage à Disneyland</h1>
+        <h2>Détails des paramètres</h2>
+        <ul>
+            <li><strong>Nombre de participants :</strong> {participants}</li>
+            <li><strong>Nombre de nuitées :</strong> {days}</li>
+        </ul>
+
         <h2>Détails des coûts par catégorie</h2>
 
         <h3>Transport ({transport_type})</h3>
