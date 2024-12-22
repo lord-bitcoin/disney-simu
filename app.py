@@ -44,15 +44,15 @@ if st.button("Rétablir les valeurs par défaut"):
     st.experimental_rerun()
 
 # Entrées utilisateur
-participants = st.number_input("Nombre de participants", min_value=1, value=7, key="participants")
-days = st.number_input("Nombre de jours/nuitées", min_value=1, value=3, key="days")
-st.text(f"Nombre de nuitées : {num_nights}")
+participants = st.number_input("Nombre de participants", min_value=1, value=7)
+days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
 num_nights = days - 1
+st.text(f"Nombre de nuitées : {num_nights}")
 
-gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)", value=True)
+gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
 
 # Choix Airbnb proche Disney
-airbnb_proche_disney = st.checkbox("Airbnb proche Disney (accessible à pieds)", value=True)
+airbnb_proche_disney = st.checkbox("Airbnb proche Disney (accessible à pieds)")
 if airbnb_proche_disney:
     costs["common"]["lodging_per_night"] = 40  # Modifier le coût par nuit par participant
     costs["train"]["rer_airbnb_disney"] = 0  # Désactiver l'option RER Airbnb-Disney
@@ -67,7 +67,7 @@ lodging_per_participant = costs["common"]["lodging_per_night"] * num_nights
 total_lodging = lodging_per_participant * participants
 
 # Sélection du mode de transport
-transport_type = st.selectbox("Mode de transport", ["Minibus", "Train"], index=1)
+transport_type = st.selectbox("Mode de transport", ["Minibus", "Train"])
 
 if transport_type == "Minibus":
     st.sidebar.title("Paramètres spécifiques au Minibus")
@@ -141,6 +141,7 @@ def generate_html_report():
         <h2>Détails des paramètres</h2>
         <ul>
             <li><strong>Nombre de participants :</strong> {participants}</li>
+            <li><strong>Nombre de jours :</strong> {days}</li>
             <li><strong>Nombre de nuitées :</strong> {num_nights}</li>
         </ul>
 
