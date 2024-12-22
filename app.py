@@ -9,7 +9,7 @@ def reset_to_defaults():
         "common": {
             "disney": 300,  # Par personne
             "food": 15,  # Par jour
-            "lodging_per_night": 125  # Coût du logement par nuit et par participant
+            "lodging_per_night": 40  # Coût du logement par nuit et par participant
         },
         "minibus": {
             "location": 500,  # Location du minibus
@@ -41,7 +41,7 @@ participants = st.number_input("Nombre de participants", min_value=1, value=7)
 days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
 
 # Ajustement du coût du logement
-costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant (par défaut 125€)", value=costs["common"]["lodging_per_night"])
+costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant (par défaut 40€)", value=costs["common"]["lodging_per_night"])
 # Correction du calcul total du logement
 lodging_per_participant = costs["common"]["lodging_per_night"] * days
 total_lodging = lodging_per_participant * participants
