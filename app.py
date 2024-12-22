@@ -17,7 +17,7 @@ def reset_to_defaults():
             "fuel": 250,  # Carburant
             "toll": 90,  # Péages
             "parking": 20,  # Par jour
-            "sarah_train": 80  # Train pour Sarah venant de Nantes
+            "sarah_train": 90  # Train pour Sarah venant de Nantes
         },
         "train": {
             "bordeaux_train": 90,  # Billet Bordeaux-Paris
@@ -49,6 +49,12 @@ days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
 
 gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
 
+# Choix Airbnb proche Disney
+airbnb_proche_disney = st.checkbox("Airbnb proche Disney (accessible à pieds)")
+if airbnb_proche_disney:
+    costs["common"]["lodging_per_night"] = 60  # Modifier le coût par nuit par participant
+    costs["train"]["rer_airbnb_disney"] = 0  # Désactiver l'option RER Airbnb-Disney
+
 # Ajustement du coût du logement
 costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant", value=costs["common"]["lodging_per_night"])
 # Correction du calcul total du logement
@@ -78,8 +84,8 @@ elif transport_type == "Train":
     st.sidebar.title("Paramètres spécifiques au Train")
     num_bordeaux_train = st.sidebar.number_input("Nombre de participants depuis Bordeaux", min_value=0, value=4)
     num_nantes_train = st.sidebar.number_input("Nombre de participants depuis Nantes", min_value=0, value=1)
-    num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=7)
-    num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=7)
+    num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=2)
+    num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=7, disabled=airbnb_proche_disney)
 
     costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris", value=costs["train"]["bordeaux_train"])
     costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris", value=costs["train"]["nantes_train"])
@@ -99,7 +105,7 @@ elif transport_type == "Train":
 
 # Options communes
 st.sidebar.title("Paramètres communs")
-costs["common"]["disney"] = st.sidebar.number_input("Coût Billets Disney", value=costs["common"]["disney"])
+costs["common"]["disney"] = st.sidebar.number_input("Coût Disney", value=costs["common"]["disney"])
 costs["common"]["food"] = st.sidebar.number_input("Coût nourriture", value=costs["common"]["food"])
 
 total_disney = costs["common"]["disney"] * participants
@@ -121,8 +127,6 @@ def generate_html_report():
     <body>
         <h1>Résumé des coûts pour le voyage à Disneyland</h1>
         <h2>Détails des coûts par catégorie</h2>
-        <h3>Nombre de participants : ({participants})</h3>
-        <h3>Nombre de nuitées : ({days})</h3>
 
         <h3>Transport ({transport_type})</h3>
         <ul>
@@ -140,7 +144,7 @@ def generate_html_report():
         html_content += f"""
             <li>Billets Bordeaux-Paris (pour {num_bordeaux_train} participants) : {costs['train']['bordeaux_train'] * num_bordeaux_train} €</li>
             <li>Billets Nantes-Paris (pour {num_nantes_train} participants) : {costs['train']['nantes_train'] * num_nantes_train} €</li>
-            <li>RER Paris-Disney (pour {num_rer_paris_disney} participants sur {days} jours) : {costs['train']['rer_paris_disney'] * num_rer_paris_disney * 2} €</li>
+            <li>RER Paris-Disney (pour {num_rer_paris_disney} participants) : {costs['train']['rer_paris_disney'] * 2 * num_rer_paris_disney} €</li>
             <li>RER Airbnb-Disney (pour {num_rer_airbnb_disney} participants sur {days} jours) : {costs['train']['rer_airbnb_disney'] * num_rer_airbnb_disney * days} €</li>
             <li>Bagagerie (pour {participants} participants sur {baggage_days} jours) : {costs['train']['baggage'] * participants * baggage_days} €</li>
         """
