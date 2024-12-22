@@ -45,7 +45,8 @@ if st.button("Rétablir les valeurs par défaut"):
 
 # Entrées utilisateur
 participants = st.number_input("Nombre de participants", min_value=1, value=7)
-days = st.number_input("Nombre de jours", min_value=3, value=4)
+days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
+num_nights = days - 1
 
 gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
 
@@ -61,7 +62,7 @@ if not airbnb_proche_disney:
 # Ajustement du coût du logement
 costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant", value=costs["common"]["lodging_per_night"])
 # Correction du calcul total du logement
-lodging_per_participant = costs["common"]["lodging_per_night"] * days
+lodging_per_participant = costs["common"]["lodging_per_night"] * num_nights
 total_lodging = lodging_per_participant * participants
 
 # Sélection du mode de transport
@@ -139,7 +140,7 @@ def generate_html_report():
         <h2>Détails des paramètres</h2>
         <ul>
             <li><strong>Nombre de participants :</strong> {participants}</li>
-            <li><strong>Nombre de nuitées :</strong> {days}</li>
+            <li><strong>Nombre de nuitées :</strong> {num_nights}</li>
         </ul>
 
         <h2>Détails des coûts par catégorie</h2>
