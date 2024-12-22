@@ -93,7 +93,7 @@ elif transport_type == "Train":
     costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris", value=costs["train"]["bordeaux_train"])
     costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris", value=costs["train"]["nantes_train"])
     costs["train"]["rer_paris_disney"] = st.sidebar.number_input("Coût RER Paris-Disney", value=costs["train"]["rer_paris_disney"])
-    costs["train"]["rer_airbnb_disney"] = st.sidebar.number_input("Coût RER Airbnb-Disney", value=costs["train"]["rer_airbnb_disney"])
+    costs["train"]["rer_airbnb_disney"] = st.sidebar.number_input("Coût RER Airbnb-Disney", value=costs["train"]["rer_airbnb_disney"], disabled=airbnb_proche_disney)
     costs["train"]["baggage"] = st.sidebar.number_input("Coût bagagerie", value=costs["train"]["baggage"])
 
     baggage_days = st.sidebar.slider("Nombre de jours d'utilisation de la bagagerie", min_value=0, max_value=2, value=1)
