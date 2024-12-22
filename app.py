@@ -18,12 +18,18 @@ def reset_to_defaults():
             "sarah_train": 80  # Train pour Sarah venant de Nantes
         },
         "train_airbnb_loin": {
-            "transport": 707,  # Bordeaux/Nantes à Paris, métro Disney, RER, bagagerie
-            "airbnb": 1000
+            "bordeaux_train": 94,  # Billet Bordeaux-Paris
+            "nantes_train": 80,  # Billet Nantes-Paris
+            "rer_disney": 10,  # RER Paris-Disney (par jour par personne)
+            "baggage": 5,  # Bagagerie (par personne par jour)
+            "airbnb": 1000  # Airbnb coût total
         },
         "train_airbnb_proche": {
-            "transport": 513,  # Bordeaux/Nantes à Paris, métro Disney, bagagerie
-            "airbnb": 1200
+            "bordeaux_train": 94,  # Billet Bordeaux-Paris
+            "nantes_train": 80,  # Billet Nantes-Paris
+            "metro_disney": 8,  # Métro Paris-Disney (par trajet par personne)
+            "baggage": 5,  # Bagagerie (par personne par jour)
+            "airbnb": 1200  # Airbnb coût total
         }
     }
 
@@ -60,16 +66,34 @@ if transport_type == "Minibus":
 
 elif transport_type == "Train + Airbnb loin":
     st.sidebar.title("Paramètres spécifiques au Train + Airbnb loin")
-    costs["train_airbnb_loin"]["transport"] = st.sidebar.number_input("Coût transport (Train + Airbnb loin)", value=costs["train_airbnb_loin"]["transport"])
+    costs["train_airbnb_loin"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris (par personne)", value=costs["train_airbnb_loin"]["bordeaux_train"])
+    costs["train_airbnb_loin"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris (par personne)", value=costs["train_airbnb_loin"]["nantes_train"])
+    costs["train_airbnb_loin"]["rer_disney"] = st.sidebar.number_input("Coût RER Paris-Disney (par jour par personne)", value=costs["train_airbnb_loin"]["rer_disney"])
+    costs["train_airbnb_loin"]["baggage"] = st.sidebar.number_input("Coût bagagerie (par jour par personne)", value=costs["train_airbnb_loin"]["baggage"])
     costs["train_airbnb_loin"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb loin)", value=costs["train_airbnb_loin"]["airbnb"])
-    total_transport = costs["train_airbnb_loin"]["transport"]
+
+    total_transport = (
+        (costs["train_airbnb_loin"]["bordeaux_train"] * 4) +
+        (costs["train_airbnb_loin"]["nantes_train"] * 1) +
+        (costs["train_airbnb_loin"]["rer_disney"] * days * participants) +
+        (costs["train_airbnb_loin"]["baggage"] * days * 5)
+    )
     total_airbnb = costs["train_airbnb_loin"]["airbnb"]
 
 elif transport_type == "Train + Airbnb proche":
     st.sidebar.title("Paramètres spécifiques au Train + Airbnb proche")
-    costs["train_airbnb_proche"]["transport"] = st.sidebar.number_input("Coût transport (Train + Airbnb proche)", value=costs["train_airbnb_proche"]["transport"])
+    costs["train_airbnb_proche"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris (par personne)", value=costs["train_airbnb_proche"]["bordeaux_train"])
+    costs["train_airbnb_proche"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris (par personne)", value=costs["train_airbnb_proche"]["nantes_train"])
+    costs["train_airbnb_proche"]["metro_disney"] = st.sidebar.number_input("Coût métro Paris-Disney (par trajet par personne)", value=costs["train_airbnb_proche"]["metro_disney"])
+    costs["train_airbnb_proche"]["baggage"] = st.sidebar.number_input("Coût bagagerie (par jour par personne)", value=costs["train_airbnb_proche"]["baggage"])
     costs["train_airbnb_proche"]["airbnb"] = st.sidebar.number_input("Coût Airbnb (Train + Airbnb proche)", value=costs["train_airbnb_proche"]["airbnb"])
-    total_transport = costs["train_airbnb_proche"]["transport"]
+
+    total_transport = (
+        (costs["train_airbnb_proche"]["bordeaux_train"] * 4) +
+        (costs["train_airbnb_proche"]["nantes_train"] * 1) +
+        (costs["train_airbnb_proche"]["metro_disney"] * 4 * 2) +
+        (costs["train_airbnb_proche"]["baggage"] * days * 5)
+    )
     total_airbnb = costs["train_airbnb_proche"]["airbnb"]
 
 # Options communes
