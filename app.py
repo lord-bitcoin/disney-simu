@@ -79,7 +79,7 @@ elif transport_type == "Train":
     num_bordeaux_train = st.sidebar.number_input("Nombre de participants depuis Bordeaux", min_value=0, value=4)
     num_nantes_train = st.sidebar.number_input("Nombre de participants depuis Nantes", min_value=0, value=1)
     num_rer_paris_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis Paris pour Disneyland", min_value=0, value=2)
-    num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=5)
+    num_rer_airbnb_disney = st.sidebar.number_input("Nombre de participants utilisant le RER depuis l'Airbnb pour Disneyland", min_value=0, value=7)
 
     costs["train"]["bordeaux_train"] = st.sidebar.number_input("Coût billet Bordeaux-Paris", value=costs["train"]["bordeaux_train"])
     costs["train"]["nantes_train"] = st.sidebar.number_input("Coût billet Nantes-Paris", value=costs["train"]["nantes_train"])
@@ -99,8 +99,8 @@ elif transport_type == "Train":
 
 # Options communes
 st.sidebar.title("Paramètres communs")
-costs["common"]["disney"] = st.sidebar.number_input("Coût Disney (300€)", value=costs["common"]["disney"])
-costs["common"]["food"] = st.sidebar.number_input("Coût nourriture (15€)", value=costs["common"]["food"])
+costs["common"]["disney"] = st.sidebar.number_input("Coût Disney", value=costs["common"]["disney"])
+costs["common"]["food"] = st.sidebar.number_input("Coût nourriture", value=costs["common"]["food"])
 
 total_disney = costs["common"]["disney"] * participants
 total_food = costs["common"]["food"] * days * participants
@@ -151,4 +151,4 @@ if st.button("Générer le résumé HTML"):
     html_report = generate_html_report()
     b64_html = base64.b64encode(html_report.encode()).decode()
     href = f'<a href="data:text/html;base64,{b64_html}" download="disney_trip_summary.html" target="_blank">Télécharger ou ouvrir le résumé HTML</a>'
-   
+    st.markdown(href, unsafe_allow_html=True)
