@@ -54,6 +54,9 @@ airbnb_proche_disney = st.checkbox("Airbnb proche Disney (accessible à pieds)")
 if airbnb_proche_disney:
     costs["common"]["lodging_per_night"] = 60  # Modifier le coût par nuit par participant
     costs["train"]["rer_airbnb_disney"] = 0  # Désactiver l'option RER Airbnb-Disney
+if not airbnb_proche_disney:
+    costs["common"]["lodging_per_night"] = 40  # Modifier le coût par nuit par participant
+    costs["train"]["rer_airbnb_disney"] = 10  # Désactiver l'option RER Airbnb-Disney
 
 # Ajustement du coût du logement
 costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant", value=costs["common"]["lodging_per_night"])
