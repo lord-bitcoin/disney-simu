@@ -10,7 +10,7 @@ def reset_to_defaults():
         "common": {
             "disney": 260,  # Par personne
             "food": 15,  # Par jour
-            "lodging_per_night": 40  # Coût du logement par nuit et par participant
+            "lodging_per_night": 30  # Coût du logement par nuit et par participant
         },
         "minibus": {
             "location": 500,  # Location du minibus
@@ -52,10 +52,10 @@ gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition 
 # Choix Airbnb proche Disney
 airbnb_proche_disney = st.checkbox("Airbnb proche Disney (accessible à pieds)")
 if airbnb_proche_disney:
-    costs["common"]["lodging_per_night"] = 60  # Modifier le coût par nuit par participant
+    costs["common"]["lodging_per_night"] = 40  # Modifier le coût par nuit par participant
     costs["train"]["rer_airbnb_disney"] = 0  # Désactiver l'option RER Airbnb-Disney
 if not airbnb_proche_disney:
-    costs["common"]["lodging_per_night"] = 40  # Modifier le coût par nuit par participant
+    costs["common"]["lodging_per_night"] = 30  # Modifier le coût par nuit par participant
     costs["train"]["rer_airbnb_disney"] = 10  # Désactiver l'option RER Airbnb-Disney
 
 # Ajustement du coût du logement
