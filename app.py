@@ -109,21 +109,14 @@ total_food = costs["common"]["food"] * days * participants
 total_cost = total_transport + total_lodging + total_disney + total_food
 cost_per_person = total_cost / 6
 
-# Résumé détaillé
-detailed_summary = {
-    "Transport total": total_transport,
-    "Hébergement (par nuit)": costs['common']['lodging_per_night'],
-    "Hébergement total": total_lodging,
-    "Disney billets": total_disney,
-    "Nourriture (total)": total_food,
-    "Coût total groupe": total_cost,
-    "Coût par personne": cost_per_person
-}
-
 # Affichage des résultats
-st.write(f"**Coût total pour {transport_type} :** {total_cost} €")
-st.write(f"**Coût par personne (réparti sur 6) :** {cost_per_person:.2f} €")
+st.header("Résumé des coûts")
+st.markdown(f"### **Coût total pour {transport_type} :** {total_cost} €")
+st.markdown(f"### **Coût par personne (réparti sur 6) :** {cost_per_person:.2f} €")
 
-# Affichage du résumé détaillé
-st.write("### Détail des coûts")
-st.write(detailed_summary)
+# Affichage convivial des détails
+st.subheader("Détail des coûts")
+st.markdown(f"- **Transport total :** {total_transport} €")
+st.markdown(f"- **Hébergement :** {total_lodging} € (à raison de {costs['common']['lodging_per_night']} € par nuit par participant)")
+st.markdown(f"- **Billets Disney :** {total_disney} €")
+st.markdown(f"- **Nourriture :** {total_food} € (à raison de {costs['common']['food']} € par jour par participant)")
