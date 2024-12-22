@@ -49,6 +49,8 @@ if st.button("Rétablir les valeurs par défaut"):
 participants = st.number_input("Nombre de participants", min_value=1, value=7)
 days = st.number_input("Nombre de jours/nuitées", min_value=1, value=4)
 
+gift_option = st.checkbox("Activer l'option cadeau d'anniversaire (répartition des coûts sur un participant de moins)")
+
 # Ajustement du coût du logement
 costs["common"]["lodging_per_night"] = st.number_input("Coût du logement par nuit et par participant (par défaut 40€)", value=costs["common"]["lodging_per_night"])
 # Correction du calcul total du logement
@@ -106,14 +108,17 @@ total_disney = costs["common"]["disney"] * participants
 total_food = costs["common"]["food"] * days * participants
 
 # Total final
-# Les coûts totaux sont répartis sur 6 participants au lieu de 7
+# Les coûts totaux sont répartis sur le nombre de participants moins 1 si l'option cadeau est activée
+repartition_count = participants - 1 if gift_option else participants
+
+# Calcul des totaux
 total_cost = total_transport + total_lodging + total_disney + total_food
-cost_per_person = total_cost / 6
+cost_per_person = total_cost / repartition_count
 
 # Affichage des résultats
 st.header("Résumé des coûts")
 st.markdown(f"### **Coût total pour {transport_type} :** {total_cost} €")
-st.markdown(f"### **Coût par personne (réparti sur 6) :** {cost_per_person:.2f} €")
+st.markdown(f"### **Coût par personne (réparti sur {repartition_count}) :** {cost_per_person:.2f} €")
 
 # Affichage convivial des détails
 st.subheader("Détail des coûts")
