@@ -22,7 +22,7 @@ def reset_to_defaults():
         "train": {
             "bordeaux_train": 94,  # Billet Bordeaux-Paris
             "nantes_train": 80,  # Billet Nantes-Paris
-            "rer_paris_disney": 10,  # RER Paris-Disney (par jour par personne)
+            "rer_paris_disney": 10,  # RER Paris-Disney
             "rer_airbnb_disney": 8,  # RER Airbnb-Disney (par jour par personne)
             "baggage": 5  # Bagagerie (par personne par jour)
         }
